@@ -6,6 +6,8 @@ import com.atguigu.springcloud.entities.Payment;
 import com.atguigu.springcloud.service.PaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,15 +15,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
+
 
 @RestController
 @Slf4j
 public class PaymentController {
+
     @Resource
     private PaymentService paymentService;
     @Value("${server.port}")
     private String serverPort;
+
+    @Resource
+    private DiscoveryClient discoveryClient;
 
 
     @PostMapping(value = "/payment/create")
@@ -41,5 +49,18 @@ public class PaymentController {
             return new CommontResult(200, "查找成功,serverPort:" + serverPort, payment);
         }
         return new CommontResult(444, "查找失败", null);
+    }
+
+    @GetMapping(value = "/payment/discovery")
+    public Object discovery(){
+        List<String> services = discoveryClient.getServices();
+        services.stream().forEach(e ->{
+            log.info("------services------" + e);
+        });
+        List<ServiceInstance> serviceInstances = discoveryClient.getInstances("CLOUD-PAYMENT-SERVICE");
+        serviceInstances.stream().forEach(e ->{
+            log.info("------instance------" + e.getServiceId() + ":" + e.getPort() + ":" + e.getUri());
+        });
+        return this.discoveryClient;
     }
 }
