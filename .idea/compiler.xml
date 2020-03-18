@@ -13,6 +13,7 @@
         <module name="cloud-provider-payment8001" />
         <module name="cloud-provider-payment8002" />
         <module name="cloud-provider-payment8004" />
+        <module name="cloud-provider-payment8006" />
       </profile>
     </annotationProcessing>
   </component>
