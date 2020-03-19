@@ -11,3 +11,7 @@ eureka:
 ribbon:
   ReadTimeout: 5000
   connectTimeout: 5000
+
+logging:
+  level:
+    com.atguigu.springcloud.service.PaymentFeignService: debug
