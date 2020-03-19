@@ -11,4 +11,5 @@ public class MySelfRule {
     public IRule myRule(){
         return new RandomRule();
     }
+
 }
